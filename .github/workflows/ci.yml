@@ -17,6 +17,8 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
           POSTGRES_DB: simple_bank
+        ports: 
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -38,7 +40,7 @@ jobs:
         which migrate
 
     - name: Run migrations
-      run: migrate -path db/migration -database "$(DB_URL)" -verbose up
+      run: migrate -path db/migration -database postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable -verbose up
 
     - name: Test
       run: go test -v -cover ./...
